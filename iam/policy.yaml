@@ -1,0 +1,45 @@
+organizations:
+- name: organizations/${organization_id}
+  iamPolicy:
+    bindings:
+    - role: organizations/${organization_id}/roles/org.admin_${random}
+      members:
+      - ${group_org_admin} 
+    - role: roles/organizationPolicyAdmin
+      members:
+      - ${group_org_admin}
+  roles: 
+  - name: org.admin_${random}
+    title: Organization Administrators
+    description: Custom Role for Organization Administrators
+    includedPermissions:
+    - resourcemanager.organizations.get
+    - resourcemanager.organizations.getIamPolicy
+    - resourcemanager.folders.get
+    - resourcemanager.folders.getIamPolicy
+    - resourcemanager.folders.list
+    - resourcemanager.projects.get
+    - resourcemanager.projects.getIamPolicy
+    - resourcemanager.projects.list
+
+folders:
+- name: folders/${fldr_devops}
+  iamPolicy:
+    bindings:
+    - role: roles/folderAdmin
+      members:
+      - ${group_org_admin}
+  
+projects:
+- name: projects/${prj_pipelines}
+  iamPolicy:
+    bindings:
+    - role: projects/{$prj_pipelines}/roles/org_admin_${random}
+      members:
+      - ${group_org_admin}
+
+  roles:
+  - name: org_admin_${random}
+    includedPermissions:
+    - storage.objects.get
+  
