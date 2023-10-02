@@ -36,11 +36,13 @@ variable "purpose" {
 variable "algorithm" {
   description = "The algorithm for the key"
   type        = string
+  default     = null
 }
 
 variable "protection_level" {
   description = "The algorithm for the key"
   type        = string
+  default     = null
 }
 
 variable "labels" {
