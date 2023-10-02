@@ -10,14 +10,14 @@ resource "random_string" "suffix" {
 }
 
 resource "google_kms_key_ring" "key_ring" {
-  count    = var.key_ring != null ? 0 : 1
+  for_each = var.key_ring != null ? [] : [1]
   name     = var.key_ring_name
   project  = var.project
   location = var.location
 }
 
 resource "google_kms_crypto_key" "dev_key" {
-  count                      = var.prevent_destroy ? 0 : 1
+  for_each                   = var.prevent_destroy ? [] : [1]
   name                       = var.name
   key_ring                   = local.key_ring
   rotation_period            = var.rotation_period
@@ -25,9 +25,13 @@ resource "google_kms_crypto_key" "dev_key" {
   purpose                    = var.purpose
   labels                     = var.labels
 
-  version_template {
-    algorithm        = var.algorithm
-    protection_level = var.protection_level
+  dynamic "version_template" {
+    for_each = var.algorithm != null ? [1] : []
+
+    content {
+      algorithm        = var.algorithm
+      protection_level = var.protection_level
+    }
   }
 
   lifecycle {
@@ -36,7 +40,7 @@ resource "google_kms_crypto_key" "dev_key" {
 }
 
 resource "google_kms_crypto_key" "prod_key" {
-  count                      = var.prevent_destroy ? 1 : 0
+  for_each                   = var.prevent_destroy ? [1] : []
   name                       = var.name
   key_ring                   = local.key_ring
   rotation_period            = var.rotation_period
@@ -44,9 +48,13 @@ resource "google_kms_crypto_key" "prod_key" {
   purpose                    = var.purpose
   labels                     = var.labels
 
-  version_template {
-    algorithm        = var.algorithm
-    protection_level = var.protection_level
+  dynamic "version_template" {
+    for_each = var.algorithm != null ? [1] : []
+
+    content {
+      algorithm        = var.algorithm
+      protection_level = var.protection_level
+    }
   }
 
   lifecycle {
