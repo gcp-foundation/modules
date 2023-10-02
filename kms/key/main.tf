@@ -44,9 +44,13 @@ resource "google_kms_crypto_key" "prod_key" {
   purpose                    = var.purpose
   labels                     = var.labels
 
-  version_template {
-    algorithm        = var.algorithm
-    protection_level = var.protection_level
+  dynamic "version_template" {
+    count = var.algorithm != null ? 1 : 0
+
+    content {
+      algorithm        = var.algorithm
+      protection_level = var.protection_level
+    }
   }
 
   lifecycle {
