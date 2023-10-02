@@ -10,14 +10,14 @@ resource "random_string" "suffix" {
 }
 
 resource "google_kms_key_ring" "key_ring" {
-  for_each = var.key_ring != null ? [] : [1]
+  for_each = var.key_ring == null ? ["1"] : []
   name     = var.key_ring_name
   project  = var.project
   location = var.location
 }
 
 resource "google_kms_crypto_key" "dev_key" {
-  for_each                   = var.prevent_destroy ? [] : [1]
+  for_each                   = var.prevent_destroy ? [] : ["1"]
   name                       = var.name
   key_ring                   = local.key_ring
   rotation_period            = var.rotation_period
@@ -40,7 +40,7 @@ resource "google_kms_crypto_key" "dev_key" {
 }
 
 resource "google_kms_crypto_key" "prod_key" {
-  for_each                   = var.prevent_destroy ? [1] : []
+  for_each                   = var.prevent_destroy ? ["1"] : []
   name                       = var.name
   key_ring                   = local.key_ring
   rotation_period            = var.rotation_period
@@ -49,7 +49,7 @@ resource "google_kms_crypto_key" "prod_key" {
   labels                     = var.labels
 
   dynamic "version_template" {
-    for_each = var.algorithm != null ? [1] : []
+    for_each = var.algorithm != null ? ["1"] : []
 
     content {
       algorithm        = var.algorithm
