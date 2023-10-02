@@ -1,5 +1,5 @@
 locals {
-  key_ring = var.key_ring != null ? var.key_ring : google_kms_key_ring[0].key_ring.id
+  key_ring = var.key_ring != null ? var.key_ring : google_kms_key_ring.key_ring[0].id
   key      = var.prevent_destroy ? google_kms_crypto_key.dev_key[0].id : google_kms_crypto_key.prod_key[0].id
 }
 
@@ -59,13 +59,13 @@ resource "google_kms_crypto_key" "prod_key" {
 }
 
 resource "google_kms_crypto_key_iam_binding" "encrypters" {
-  crypto_key_id = local.crypto_key_id
+  crypto_key_id = local.key
   role          = "roles/cloudkms.cryptoKeyEncrypter"
   members       = var.encrypters
 }
 
 resource "google_kms_crypto_key_iam_binding" "decrypters" {
-  crypto_key_id = local.crypto_key_id
+  crypto_key_id = local.key
   role          = "roles/cloudkms.cryptoKeyDecrypter"
   members       = var.decrypters
 }

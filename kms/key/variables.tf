@@ -3,6 +3,18 @@ variable "name" {
   type        = string
 }
 
+variable "encrypters" {
+  description = "A list of principals that are allowed to encrypt using this key"
+  type        = list(string)
+  default     = null
+}
+
+variable "decrypters" {
+  description = "A list of principals that are allowed to decrypt using this key"
+  type        = list(string)
+  default     = null
+}
+
 variable "prevent_destroy" {
   description = "Prevent the destruction of the key?"
   type        = bool
