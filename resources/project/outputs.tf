@@ -1,5 +1,5 @@
 output "id" {
-  value = google_project.project.id
+  value = google_project.project.project_id
 }
 
 output "number" {
