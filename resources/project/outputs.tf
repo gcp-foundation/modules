@@ -6,5 +6,6 @@ output "number" {
   value = google_project.project.number
 }
 
-
-
+output "services" {
+  value = google_project_services.service
+}
