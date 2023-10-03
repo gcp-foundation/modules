@@ -21,7 +21,7 @@ resource "google_storage_bucket" "bucket" {
     for_each = [lookup(local.data_classifications, var.data_classification, null)]
     content {
       is_locked        = true
-      retention_period = each.value
+      retention_period = retention_policy.value
     }
   }
 
