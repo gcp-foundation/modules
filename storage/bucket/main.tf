@@ -17,13 +17,15 @@ resource "google_storage_bucket" "bucket" {
     }
   }
 
+  /*
   dynamic "retention_policy" {
-    for_each = [lookup(local.data_classifications, var.data_classification, null)]
+    for_each = lookup(local.data_classifications, var.data_classification, null)
     content {
       is_locked        = true
       retention_period = retention_policy.value
     }
   }
+*/
 
   dynamic "logging" {
     for_each = var.log_bucket == null ? [] : [var.log_bucket]
