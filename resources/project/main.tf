@@ -37,5 +37,4 @@ resource "google_project_service" "service" {
   project                    = google_project.project.project_id
   disable_on_destroy         = true
   disable_dependent_services = true
-
 }

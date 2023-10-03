@@ -13,6 +13,12 @@ variable "data_classification" {
   type        = string
 }
 
+variable "kms_key_id" {
+  description = "KMS key for CMEK encryption"
+  type        = string
+  default     = null
+}
+
 variable "versioning" {
   description = "Enable versioning"
   type        = bool
@@ -24,3 +30,10 @@ variable "log_bucket" {
   type        = string
   default     = null
 }
+
+variable "labels" {
+  description = "Labels for the bucket"
+  type        = map(string)
+  default     = null
+}
+
