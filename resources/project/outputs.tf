@@ -7,5 +7,5 @@ output "number" {
 }
 
 output "services" {
-  value = var.services != [] ? google_project_services.service : []
+  value = google_project_service.service
 }
