@@ -11,5 +11,5 @@ output "location" {
 }
 
 output "project" {
-  value = google_artifact_registry_repository.repository.project_id
+  value = google_artifact_registry_repository.repository.project
 }
