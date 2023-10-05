@@ -24,11 +24,11 @@ resource "google_project_default_service_accounts" "accounts" {
   restore_policy = "NONE"
 }
 
-resource "google_project_iam_binding" "owner" {
-  project = google_project.project.project_id
-  role    = "roles/owner"
-  members = []
-}
+# resource "google_project_iam_binding" "owner" {
+#   project = google_project.project.project_id
+#   role    = "roles/owner"
+#   members = []
+# }
 
 resource "google_project_service" "service" {
   for_each = var.services
