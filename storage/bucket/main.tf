@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "bucket" {
-  name                        = "${var.project}_${var.name}"
+  name                        = "${var.project}-${var.name}"
   project                     = var.project
   location                    = var.location
   force_destroy               = true
