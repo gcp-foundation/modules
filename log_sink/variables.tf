@@ -28,4 +28,5 @@ variable "include_children" {
 variable "exclusions" {
   description = "The exclusions to apply to the log sink"
   type        = list(any)
+  default     = null
 }
