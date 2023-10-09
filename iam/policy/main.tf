@@ -3,7 +3,7 @@ locals {
     for organization in var.policy.organizations : [
       for binding in organization.iamPolicy.bindings : [
         for member in binding.members : {
-          org_id = organization.name
+          org_id = substr(organization.name, 14, -1)
           role   = binding.role
           member = member
         }
@@ -11,6 +11,7 @@ locals {
     ]
   ])
 
+  # Need to add code to cope with missing folders object
   folder_bindings = flatten([
     for folder in var.policy.folders : [
       for binding in folder.iamPolicy.bindings : [
@@ -23,6 +24,7 @@ locals {
     ]
   ])
 
+  # Need to add code to cope with missing projects object
   project_bindings = flatten([
     for project in var.policy.projects : [
       for binding in project.iamPolicy.bindings : [
