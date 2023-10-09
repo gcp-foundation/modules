@@ -4,7 +4,4 @@ resource "random_string" "random_num" {
   special   = false
 }
 
-data "google_organization" "organization" {
-  domain = var.domain
-}
 

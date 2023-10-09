@@ -1,12 +1,6 @@
 locals {
-  environment = {
-    random = random_string.random_num.result
-  }
-  resources = yamldecode(file("${path.module}/${var.domain}.yaml"))
-  policy    = yamldecode(templatefile("${path.module}/policy.yaml", merge(local.resources, local.environment)))
-
   organization_bindings = flatten([
-    for organization in local.policy.organizations : [
+    for organization in var.policy.organizations : [
       for binding in organization.iamPolicy.bindings : [
         for member in binding.members : {
           org_id = organization.name
@@ -18,7 +12,7 @@ locals {
   ])
 
   folder_bindings = flatten([
-    for folder in local.policy.folders : [
+    for folder in var.policy.folders : [
       for binding in folder.iamPolicy.bindings : [
         for member in binding.members : {
           folder_id = folder.name
@@ -30,7 +24,7 @@ locals {
   ])
 
   project_bindings = flatten([
-    for project in local.policy.projects : [
+    for project in var.policy.projects : [
       for binding in project.iamPolicy.bindings : [
         for member in binding.members : {
           project_id = project.name
