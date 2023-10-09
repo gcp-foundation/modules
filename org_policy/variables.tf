@@ -5,5 +5,5 @@ variable "parent" {
 
 variable "policies" {
   description = "A list of policies"
-  type        = list(object)
+  type        = list(any)
 }
