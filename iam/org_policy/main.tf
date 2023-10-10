@@ -11,9 +11,9 @@ resource "google_org_policy_policy" "policy" {
       for_each = try(each.value.spec.rules, [])
       content {
         # Bug in provider, thought this was fixed ...
-        enforce   = try(rules.value.enforce, null) ? rules.values.enforce ? "TRUE" : "FALSE" : null
-        allow_all = try(rules.value.allowAll, null) ? rules.values.allowAll ? "TRUE" : "FALSE" : null
-        deny_all  = try(rules.value.denyAll, null) ? rules.values.denyAll ? "TRUE" : "FALSE" : null
+        enforce   = try(rules.value.enforce, null) ? rules.value.enforce ? "TRUE" : "FALSE" : null
+        allow_all = try(rules.value.allowAll, null) ? rules.value.allowAll ? "TRUE" : "FALSE" : null
+        deny_all  = try(rules.value.denyAll, null) ? rules.value.denyAll ? "TRUE" : "FALSE" : null
         dynamic "values" {
           for_each = try(rules.value.values, null) == null ? [] : [1]
           content {
