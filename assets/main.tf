@@ -4,11 +4,11 @@ module "organization" {
 }
 
 module "folders" {
-  source          = "folders"
+  source          = "./folders"
   organization_id = module.organization.organization_id
 }
 
 module "projects" {
-  source          = "projects"
+  source          = "./projects"
   organization_id = module.organization.organization_id
 }
