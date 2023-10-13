@@ -1,5 +1,5 @@
 module "organization" {
-  source = "organization"
+  source = "./organization"
   domain = var.domain
 }
 
