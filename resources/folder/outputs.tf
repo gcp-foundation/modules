@@ -14,6 +14,6 @@ output "display_name" {
   value = google_folder.folder.display_name
 }
 
-output "display_name" {
+output "folder" {
   value = google_folder.folder
 }
