@@ -1,5 +1,5 @@
 output "display_name" {
-  value = google_project.project.display_name
+  value = google_project.project.name
 }
 
 output "project_id" {
@@ -16,9 +16,5 @@ output "folder_id" {
 
 output "services" {
   value = google_project_service.service
-}
-
-output "project" {
-  value = google_project.project
 }
 
