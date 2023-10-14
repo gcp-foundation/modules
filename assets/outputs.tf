@@ -3,7 +3,7 @@ output "organization_id" {
 }
 
 output "folders" {
-  value = module.folders.folders
+  value = module.folders.search
 }
 
 output "projects" {
