@@ -9,3 +9,11 @@ output "id" {
 output "folder_id" {
   value = google_folder.folder.folder_id
 }
+
+output "display_name" {
+  value = google_folder.folder.display_name
+}
+
+output "display_name" {
+  value = google_folder.folder
+}
