@@ -1,4 +1,4 @@
-output "display_name" {
+output "name" {
   value = google_project.project.name
 }
 
