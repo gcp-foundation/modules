@@ -10,7 +10,7 @@ data "google_cloud_asset_resources_search_all" "folders" {
 
 locals {
   folders = {
-    for folder in data.google_cloud_asset_resources_search_all.folders.results : folder.display_name => substr(folder.name, 46, -1)
+    for folder in data.google_cloud_asset_resources_search_all.folders.results : folder.display_name => { folder_id = substr(folder.name, 46, -1) }
   }
 }
 
