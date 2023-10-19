@@ -1,9 +1,9 @@
-variable "display_name" {
+variable "folder_list" {
   description = "The display name for the folder"
-  type        = string
+  type        = list(map(string))
 }
 
 variable "parent" {
-  description = "The parent for the folder"
+  description = "The Organization id"
   type        = string
 }
