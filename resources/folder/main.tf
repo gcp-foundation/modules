@@ -7,7 +7,7 @@ locals {
 resource "google_folder" "folder_level_1" {
   for_each     = { for folder in local.folder_level_1 : folder.display_name => folder }
   display_name = each.value.display_name
-  parent       = each.value.parent
+  parent       = var.parent_name
 }
 
 resource "google_folder" "folder_level_2" {
