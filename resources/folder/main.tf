@@ -13,11 +13,11 @@ resource "google_folder" "folder_level_1" {
 resource "google_folder" "folder_level_2" {
   for_each     = { for folder in local.folder_level_2 : folder.displayName => folder }
   display_name = each.value.displayName
-  parent       = each.value.parent
+  parent       = google_folder.folder_level_1[each.value.parent].name
 }
 
 resource "google_folder" "folder_level_3" {
   for_each     = { for folder in local.folder_level_3 : folder.displayName => folder }
   display_name = each.value.displayName
-  parent       = each.value.parent
+  parent       = google_folder.folder_level_2[each.value.parent].name
 }
