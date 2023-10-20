@@ -3,7 +3,7 @@ variable "folder_list" {
   type        = list(map(string))
 }
 
-variable "parent" {
+variable "parent_name" {
   description = "The Organization id"
   type        = string
 }
