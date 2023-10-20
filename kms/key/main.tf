@@ -16,6 +16,7 @@ resource "google_kms_key_ring" "key_ring" {
   location = var.location
 }
 
+#checkov:skip=CKV_GCP_82:This key is for development of infrastructure only
 resource "google_kms_crypto_key" "dev_key" {
   count                      = var.prevent_destroy ? 0 : 1
   name                       = var.name
