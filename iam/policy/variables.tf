@@ -4,5 +4,4 @@ variable "policy" {
 
 variable "members" {
   description = "A map of member name to member objects"
-  type        = map(any)
 }
