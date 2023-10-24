@@ -11,9 +11,9 @@ output "email" {
 }
 
 output "display_name" {
-  value = google_sercice_account.service_account.display_name
+  value = google_service_account.service_account.display_name
 }
 
 output "description" {
-  value = google_sercice_account.service_account.description
+  value = google_service_account.service_account.description
 }
