@@ -9,3 +9,7 @@ output "folders" {
 output "projects" {
   value = module.projects.projects
 }
+
+output "service_accounts" {
+  value = module.service_accounts.service_accounts
+}
