@@ -43,7 +43,7 @@ resource "google_organization_iam_member" "organization" {
 
   org_id = each.value.org_id
   role   = each.value.role
-  member = var.members[each.value.member].email
+  member = "serviceAccount:${var.members[each.value.member].email}"
 }
 
 resource "google_folder_iam_member" "folder" {
@@ -51,7 +51,7 @@ resource "google_folder_iam_member" "folder" {
 
   folder = each.value.folder_id
   role   = each.value.role
-  member = var.members[each.value.member].email
+  member = "serviceAccount:${var.members[each.value.member].email}"
 }
 
 resource "google_project_iam_member" "project" {
@@ -59,5 +59,5 @@ resource "google_project_iam_member" "project" {
 
   project = each.value.project_id
   role    = each.value.role
-  member  = var.members[each.value.member].email
+  member  = "serviceAccount:${var.members[each.value.member].email}"
 }
