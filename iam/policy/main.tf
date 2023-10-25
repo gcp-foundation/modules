@@ -38,16 +38,10 @@ locals {
   ])
 }
 
-data "google_organization" "organization" {
-  for_each = { for organization in var.policy.organizations : organization.domain => organization }
-
-  domain = each.value.domain
-}
-
 resource "google_organization_iam_member" "organization" {
   for_each = { for binding in local.organization_bindings : "${binding.org_id}/${binding.role}/${binding.member}" => binding }
 
-  org_id = each.value.org_id
+  org_id = var.resources.organizations[each.value.displayName].org_id
   role   = each.value.role
   member = "serviceAccount:${var.members[each.value.member].email}"
 }
