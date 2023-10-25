@@ -11,7 +11,6 @@ locals {
     ]
   ])
 
-  # Need to add code to cope with missing folders object
   folder_bindings = flatten([
     for folder in try(var.policy.folders, []) : [
       for binding in try(folder.iamPolicy.bindings, []) : [
@@ -24,12 +23,23 @@ locals {
     ]
   ])
 
-  # Need to add code to cope with missing projects object
   project_bindings = flatten([
     for project in try(var.policy.projects, []) : [
       for binding in try(project.iamPolicy.bindings, []) : [
         for member in try(binding.members, []) : {
           name   = project.displayName
+          role   = binding.role
+          member = member
+        }
+      ]
+    ]
+  ])
+
+  service_account_bindings = flatten([
+    for service_account in try(var.policy.service_accounts, []) : [
+      for binding in try(service_account.iamPolicy.bindings, []) : [
+        for member in try(binding.members, []) : {
+          name   = service_account.displayName
           role   = binding.role
           member = member
         }
@@ -60,4 +70,12 @@ resource "google_project_iam_member" "project" {
   project = var.resources.projects[each.value.name].project_id
   role    = each.value.role
   member  = "serviceAccount:${var.members[each.value.member].email}"
+}
+
+resource "google_service_account_iam_member" "service_account" {
+  for_each = { for binding in local.service_account_bindings : "${service_account.name}/${binding.role}/${binding.member}" => binding }
+
+  service_account_id = var.resources.service_accounts[each.value.name].name
+  role               = each.value.role
+  member             = "serviceAccount:${var.members[each.value.member].email}"
 }
