@@ -3,7 +3,7 @@ locals {
     for organization in var.policy.organizations : [
       for binding in organization.iamPolicy.bindings : [
         for member in binding.members : {
-          org_id = data.google.organization.organizations[organization.domain].org_id
+          name   = organization.displayName
           role   = binding.role
           member = member
         }
@@ -16,7 +16,7 @@ locals {
     for folder in var.policy.folders : [
       for binding in folder.iamPolicy.bindings : [
         for member in binding.members : {
-          name   = folder.name
+          name   = folder.displayName
           role   = binding.role
           member = member
         }
@@ -29,7 +29,7 @@ locals {
     for project in var.policy.projects : [
       for binding in project.iamPolicy.bindings : [
         for member in binding.members : {
-          name   = project.name
+          name   = project.displayName
           role   = binding.role
           member = member
         }
