@@ -3,7 +3,7 @@ locals {
     for organization in var.policy.organizations : [
       for binding in organization.iamPolicy.bindings : [
         for member in binding.members : {
-          org_id = substr(organization.name, 14, -1)
+          org_id = data.google.organization.organizations[organization.domain].org_id
           role   = binding.role
           member = member
         }
@@ -16,9 +16,9 @@ locals {
     for folder in var.policy.folders : [
       for binding in folder.iamPolicy.bindings : [
         for member in binding.members : {
-          folder_id = folder.name
-          role      = binding.role
-          member    = member
+          name   = folder.name
+          role   = binding.role
+          member = member
         }
       ]
     ]
@@ -29,13 +29,19 @@ locals {
     for project in var.policy.projects : [
       for binding in project.iamPolicy.bindings : [
         for member in binding.members : {
-          project_id = project.name
-          role       = binding.role
-          member     = member
+          name   = project.name
+          role   = binding.role
+          member = member
         }
       ]
     ]
   ])
+}
+
+data "google_organization" "organization" {
+  for_each = { for organization in var.policy.organizations : organization.domain => organization }
+
+  domain = each.value.domain
 }
 
 resource "google_organization_iam_member" "organization" {
@@ -49,7 +55,7 @@ resource "google_organization_iam_member" "organization" {
 resource "google_folder_iam_member" "folder" {
   for_each = { for binding in local.folder_bindings : "${binding.folder_id}/${binding.role}/${binding.member}" => binding }
 
-  folder = each.value.folder_id
+  folder = var.resources.folders[each.value.name].folder_id
   role   = each.value.role
   member = "serviceAccount:${var.members[each.value.member].email}"
 }
@@ -57,7 +63,7 @@ resource "google_folder_iam_member" "folder" {
 resource "google_project_iam_member" "project" {
   for_each = { for binding in local.project_bindings : "${binding.project_id}/${binding.role}/${binding.member}" => binding }
 
-  project = each.value.project_id
+  project = var.resources.projects[each.value.name].project_id
   role    = each.value.role
   member  = "serviceAccount:${var.members[each.value.member].email}"
 }
