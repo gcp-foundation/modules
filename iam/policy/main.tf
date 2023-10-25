@@ -73,7 +73,7 @@ resource "google_project_iam_member" "project" {
 }
 
 resource "google_service_account_iam_member" "service_account" {
-  for_each = { for binding in local.service_account_bindings : "${service_account.name}/${binding.role}/${binding.member}" => binding }
+  for_each = { for binding in local.service_account_bindings : "${binding.name}/${binding.role}/${binding.member}" => binding }
 
   service_account_id = var.resources.service_accounts[each.value.name].name
   role               = each.value.role
