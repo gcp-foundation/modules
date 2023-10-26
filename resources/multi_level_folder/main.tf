@@ -1,7 +1,7 @@
 locals {
   folder_level_1 = [for folder in var.folder_list : folder if folder.parent == null]
-  folder_level_2 = setsubtract(distinct([for folder in var.folder_list : folder.parent == null ? {} : contains(local.folder_level_1.*.displayName, folder.parent) ? folder : {}]), [{}])
-  folder_level_3 = setsubtract(distinct([for folder in var.folder_list : folder.parent == null ? {} : contains(local.folder_level_2.*.displayName, folder.parent) ? folder : {}]), [{}])
+  folder_level_2 = setsubtract([for folder in var.folder_list : folder.parent == null ? {} : contains(local.folder_level_1.*.displayName, folder.parent) ? folder : {}], [{}])
+  folder_level_3 = setsubtract([for folder in var.folder_list : folder.parent == null ? {} : contains(local.folder_level_2.*.displayName, folder.parent) ? folder : {}], [{}])
 }
 
 resource "google_folder" "folder_level_1" {
