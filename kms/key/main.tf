@@ -7,7 +7,7 @@ locals {
   crypters = concat(
     [for identity in module.service_identity : "serviceAccount:${identity.email}"],
     contains(var.services, "storage.googleapis.com") ? ["serviceAccount:${data.google_storage_project_service_account.account[0].email_address}"] : [],
-    contains(var.services, "bigquery.googleapis.com") ? ["serviceAccount:${data.google_bigquery_project_service_account.account[0].email_address}"] : []
+    contains(var.services, "bigquery.googleapis.com") ? ["serviceAccount:${data.google_bigquery_default_service_account.account[0].email_address}"] : []
   )
 }
 
