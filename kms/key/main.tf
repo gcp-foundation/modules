@@ -19,8 +19,8 @@ module "service_identity" {
 }
 
 data "google_storage_project_service_account" "control_gcs_account" {
-  for_each = contains(var.services, "storage.googleapis.com") ? [1] : [0]
-  project  = var.project
+  count   = contains(var.services, "storage.googleapis.com") ? 1 : 0
+  project = var.project
 }
 
 resource "random_string" "suffix" {
