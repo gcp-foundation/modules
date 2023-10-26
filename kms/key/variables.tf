@@ -3,6 +3,12 @@ variable "name" {
   type        = string
 }
 
+variable "services" {
+  description = "A list of services that will use the key"
+  type        = list(string)
+  default     = []
+}
+
 variable "encrypters" {
   description = "A list of principals that are allowed to encrypt using this key"
   type        = list(string)

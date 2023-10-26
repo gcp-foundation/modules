@@ -1,6 +1,26 @@
 locals {
   key_ring = var.key_ring != null ? var.key_ring : google_kms_key_ring.key_ring[0].id
   key      = var.prevent_destroy ? google_kms_crypto_key.prod_key[0].id : google_kms_crypto_key.dev_key[0].id
+
+  identity_services = setsubtract(var.services, ["storage.googleapis.com", "bigquery.googleapis.com"])
+
+  crypters = concat(
+    [for identity in module.service_identity : "serviceAccount:${identity.email}"],
+    contains(var.services, "storage.googleapis.com") ? data.google_storage_project_service_account.control_gcs_account[0].email : [],
+    contains(var.services, "bigquery.googleapis.com") ? "serviceAccount:bq-${var.project}@bigquery-encryption.iam.gserviceaccount.com" : []
+  )
+}
+
+module "service_identity" {
+  source   = "../../resources/service_identity"
+  for_each = local.identity_services
+  project  = var.project
+  service  = each.value
+}
+
+data "google_storage_project_service_account" "control_gcs_account" {
+  for_each = contains(var.services, "storage.googleapis.com") ? [1] : [0]
+  project  = var.project
 }
 
 resource "random_string" "suffix" {
@@ -66,12 +86,12 @@ resource "google_kms_crypto_key" "prod_key" {
 resource "google_kms_crypto_key_iam_binding" "encrypters" {
   crypto_key_id = local.key
   role          = "roles/cloudkms.cryptoKeyEncrypter"
-  members       = var.encrypters
+  members       = concat(var.encrypters, local.crypters)
 }
 
 resource "google_kms_crypto_key_iam_binding" "decrypters" {
   crypto_key_id = local.key
   role          = "roles/cloudkms.cryptoKeyDecrypter"
-  members       = var.decrypters
+  members       = concat(var.decrypters, local.crypters)
 }
 
