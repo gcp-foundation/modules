@@ -12,13 +12,13 @@ variable "services" {
 variable "encrypters" {
   description = "A list of principals that are allowed to encrypt using this key"
   type        = list(string)
-  default     = null
+  default     = []
 }
 
 variable "decrypters" {
   description = "A list of principals that are allowed to decrypt using this key"
   type        = list(string)
-  default     = null
+  default     = []
 }
 
 variable "prevent_destroy" {
