@@ -18,20 +18,14 @@ module "service_identity" {
   service  = each.value
 }
 
-data "google_storage_project_service_account" "control_gcs_account" {
+data "google_storage_project_service_account" "account" {
   count   = contains(var.services, "storage.googleapis.com") ? 1 : 0
   project = var.project
 }
 
-data "google_storage_project_service_account" "control_gcs_account" {
+data "google_bigquery_project_service_account" "account" {
   count   = contains(var.services, "bigquery.googleapis.com") ? 1 : 0
   project = var.project
-}
-
-resource "random_string" "suffix" {
-  length  = 4
-  upper   = false
-  special = false
 }
 
 resource "google_kms_key_ring" "key_ring" {
