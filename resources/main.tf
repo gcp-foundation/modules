@@ -50,7 +50,7 @@ module "projects" {
   name            = each.value.project.displayName
   folder          = module.folders[each.value.folder.displayName].name
   services        = each.value.project.services
-  billing_account = try(each.value.project.billingAccount, local.environment.billingAccount)
+  billing_account = try(each.value.project.billingAccount, var.billing_account)
   labels          = var.labels
 }
 

@@ -11,3 +11,9 @@ variable "config" {
   #   }))
   # }))
 }
+
+variable "billing_account" {
+  description = "The default billing account to use for projects"
+  type        = string
+  default     = null
+}
