@@ -23,7 +23,7 @@ data "google_storage_project_service_account" "account" {
   project = var.project
 }
 
-data "google_bigquery_project_service_account" "account" {
+data "google_bigquery_default_service_account" "account" {
   count   = contains(var.services, "bigquery.googleapis.com") ? 1 : 0
   project = var.project
 }
