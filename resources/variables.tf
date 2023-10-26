@@ -17,3 +17,9 @@ variable "billing_account" {
   type        = string
   default     = null
 }
+
+variable "labels" {
+  description = "The default labels to be use for resources"
+  type        = map(string)
+  default     = null
+}
