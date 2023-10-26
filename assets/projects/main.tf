@@ -9,8 +9,14 @@ data "google_cloud_asset_resources_search_all" "projects" {
 }
 
 locals {
+  regex_project = "projects\\/(?P<number>.*)"
+  regex_name    = "\\/\\/cloudresourcemanager\\.googleapis\\.com\\/(?P<type>.*)\\/(?P<name>.*)"
+
   projects = {
-    for project in data.google_cloud_asset_resources_search_all.projects.results :
-    project.display_name => { project_id = substr(project.name, 47, -1), number = substr(project.project, 9, -1) }
+    for project in data.google_cloud_asset_resources_search_all.projects.results : project.display_name =>
+    {
+      project_id = regex(local.regex_name, project.name).name,
+      number     = regex(local.regex_project, project.project).number
+    }
   }
 }
