@@ -51,7 +51,7 @@ module "projects" {
   folder          = module.folders[each.value.folder.displayName].name
   services        = each.value.project.services
   billing_account = try(each.value.project.billingAccount, var.billing_account)
-  labels          = var.labels
+  labels          = try(each.value.project.labels, var.labels)
 }
 
 module "service_accounts" {

@@ -1,15 +1,22 @@
 variable "config" {
   description = "The resource configuration to create"
-
-  # type = list(object({
-  #   displayName = string
-  #   folders = list(object({
-  #     displayName = string
-  #   }))
-  #   projects = list(object({
-  #     displayName = string
-  #   }))
-  # }))
+  type = map(object({
+    organizations = list(object({
+      displayName = string
+      folders = optional(list(object({
+        displayName = string
+        projects = options(list(object({
+          displayName     = string
+          labels          = string
+          services        = optional(list(string))
+          serviceAccounts = optional(list(any))
+          keyRings        = optional(list(any))
+          storage         = optional(list(any))
+        })))
+      })))
+      projects = options(list(any)) # not used
+    }))
+  }))
 }
 
 variable "billing_account" {
