@@ -5,9 +5,9 @@ variable "config" {
       displayName = string
       folders = optional(list(object({
         displayName = string
-        projects = options(list(object({
+        projects = optional(list(object({
           displayName     = string
-          labels          = string
+          labels          = optional(map(string))
           services        = optional(list(string))
           serviceAccounts = optional(list(any))
           keyRings        = optional(list(any))
