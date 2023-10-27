@@ -14,7 +14,7 @@ variable "config" {
           storage         = optional(list(any))
         })))
       })))
-      projects = options(list(any)) # not used
+      projects = optional(list(any)) # not used
     }))
   }))
 }
