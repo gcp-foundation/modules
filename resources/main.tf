@@ -38,7 +38,7 @@ module "folders" {
 
 module "projects" {
   source   = "github.com/gcp-foundation/modules//resources/project?ref=0.0.2"
-  for_each = { for project in local.projects : project.displayName => project }
+  for_each = { for project in var.config.projects : project.displayName => project }
 
   name            = each.value.project.displayName
   folder          = module.folders[regex(local.regex_parent, each.value.parent).name].name
