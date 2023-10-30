@@ -32,19 +32,19 @@ module "folders" {
   source   = "github.com/gcp-foundation/modules//resources/folder?ref=0.0.2"
   for_each = { for folder in var.config.folders : folder.displayName => folder }
 
-  display_name = each.value.folder.displayName
-  parent       = module.organizations[regex(local.regex_parent, each.value.folder.parent).name].name
+  display_name = each.value.displayName
+  parent       = module.organizations[regex(local.regex_parent, each.value.parent).name].name
 }
 
 module "projects" {
   source   = "github.com/gcp-foundation/modules//resources/project?ref=0.0.2"
-  for_each = { for entry in local.projects : entry.project.displayName => entry }
+  for_each = { for project in local.projects : project.displayName => project }
 
   name            = each.value.project.displayName
-  folder          = module.folders[regex(local.regex_parent, each.value.project.parent).name].name
-  services        = each.value.project.services
-  billing_account = try(each.value.project.billingAccount, var.billing_account)
-  labels          = try(each.value.project.labels, var.labels)
+  folder          = module.folders[regex(local.regex_parent, each.value.parent).name].name
+  services        = each.value.services
+  billing_account = try(each.value.billingAccount, var.billing_account)
+  labels          = try(each.value.labels, var.labels)
 }
 
 module "service_accounts" {
