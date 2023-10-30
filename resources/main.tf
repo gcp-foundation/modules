@@ -1,28 +1,21 @@
 locals {
+
+  regex_parent = "(?P<type>.*)/(?P<name>.*)"
+
   folders = flatten([
-    for organization in try(var.config.organizations, []) : [
-      for folder in try(organization.folders, []) : [
-        { organization = organization, folder = folder }
-      ]
+    for folder in try(var.config.folders, []) : [
+      { folder = folder }
     ]
   ])
 
   projects = flatten([
-    for organization in try(var.config.organizations, []) : [
-      for folder in try(organization.folders, []) : [
-        for project in try(folder.projects, []) : { folder = folder, project = project }
-      ]
-    ]
+    for project in try(var.config.projects, []) : { project = project }
   ])
 
   service_accounts = flatten([
-    for organization in try(var.config.organizations, []) : [
-      for folder in try(organization.folders, []) : [
-        for project in try(folder.projects, []) : [
-          for service_account in try(project.serviceAccounts, []) : [
-            { project = project, service_account = service_account }
-          ]
-        ]
+    for project in try(var.config.projects, []) : [
+      for service_account in try(project.serviceAccounts, []) : [
+        { project = project, service_account = service_account }
       ]
     ]
   ])
@@ -37,10 +30,10 @@ module "organizations" {
 
 module "folders" {
   source   = "github.com/gcp-foundation/modules//resources/folder?ref=0.0.2"
-  for_each = { for entry in local.folders : entry.folder.displayName => entry }
+  for_each = { for folder in var.config.folders : folder.displayName => folder }
 
   display_name = each.value.folder.displayName
-  parent       = module.organizations[each.value.organization.displayName].name
+  parent       = module.organizations[regex(local.regex_parent, each.value.folder.parent).name].id
 }
 
 module "projects" {
@@ -48,7 +41,7 @@ module "projects" {
   for_each = { for entry in local.projects : entry.project.displayName => entry }
 
   name            = each.value.project.displayName
-  folder          = module.folders[each.value.folder.displayName].name
+  folder          = module.folders[regex(local.regex_parent, each.value.project.parent).name].name
   services        = each.value.project.services
   billing_account = try(each.value.project.billingAccount, var.billing_account)
   labels          = try(each.value.project.labels, var.labels)
