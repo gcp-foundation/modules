@@ -40,7 +40,7 @@ module "projects" {
   source   = "github.com/gcp-foundation/modules//resources/project?ref=0.0.2"
   for_each = { for project in var.config.projects : project.displayName => project }
 
-  name            = each.value.project.displayName
+  name            = each.value.displayName
   folder          = module.folders[regex(local.regex_parent, each.value.parent).name].name
   services        = each.value.services
   billing_account = try(each.value.billingAccount, var.billing_account)
