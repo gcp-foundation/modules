@@ -1,6 +1,6 @@
 locals {
   key_ring = var.key_ring != null ? var.key_ring : google_kms_key_ring.key_ring[0].id
-  key      = var.prevent_destroy ? google_kms_crypto_key.prod_key[0].id : google_kms_crypto_key.dev_key[0].id
+  key      = var.prevent_destroy ? google_kms_crypto_key.type_2_key[0].id : google_kms_crypto_key.type_1_key[0].id
 }
 
 resource "random_string" "suffix" {
@@ -16,7 +16,8 @@ resource "google_kms_key_ring" "key_ring" {
   location = var.location
 }
 
-resource "google_kms_crypto_key" "dev_key" {
+#terraform destroy will delete this kms key
+resource "google_kms_crypto_key" "type_1_key" {
   count                      = var.prevent_destroy ? 0 : 1
   name                       = var.name
   key_ring                   = local.key_ring
@@ -39,7 +40,8 @@ resource "google_kms_crypto_key" "dev_key" {
   }
 }
 
-resource "google_kms_crypto_key" "prod_key" {
+#terraform destroy will not delete this kms key
+resource "google_kms_crypto_key" "type_2_key" {
   count                      = var.prevent_destroy ? 1 : 0
   name                       = var.name
   key_ring                   = local.key_ring
@@ -58,7 +60,7 @@ resource "google_kms_crypto_key" "prod_key" {
   }
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 }
 
