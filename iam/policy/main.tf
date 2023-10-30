@@ -1,4 +1,6 @@
 locals {
+  regex_role = "(?P<type>.*)\\/(?P<name>.*)"
+
   org_roles = flatten([
     for organization in try(var.policy.organizations, []) : [
       for role in try(organization.roles, []) : {
@@ -74,8 +76,10 @@ resource "google_organization_iam_member" "organization" {
   for_each = { for binding in local.organization_bindings : "${binding.name}/${binding.role}/${binding.member}" => binding }
 
   org_id = var.resources.organizations[each.value.name].org_id
-  role   = each.value.role
+  role   = regex(local.regex_role, each.value.role).type == "role" ? each.value.role : google_organization_iam_custom_role.organization[regex(local.regex_role, each.value.role).name].name
   member = "serviceAccount:${var.members[each.value.member].email}"
+
+  depends_on = [google_organization_iam_custom_role.organization]
 }
 
 resource "google_folder_iam_member" "folder" {
@@ -84,6 +88,8 @@ resource "google_folder_iam_member" "folder" {
   folder = var.resources.folders[each.value.name].folder_id
   role   = each.value.role
   member = "serviceAccount:${var.members[each.value.member].email}"
+
+  depends_on = [google_organization_iam_custom_role.organization]
 }
 
 resource "google_project_iam_member" "project" {
@@ -92,6 +98,8 @@ resource "google_project_iam_member" "project" {
   project = var.resources.projects[each.value.name].project_id
   role    = each.value.role
   member  = "serviceAccount:${var.members[each.value.member].email}"
+
+  depends_on = [google_organization_iam_custom_role.organization]
 }
 
 resource "google_service_account_iam_member" "service_account" {
@@ -100,4 +108,6 @@ resource "google_service_account_iam_member" "service_account" {
   service_account_id = var.resources.service_accounts[each.value.name].name
   role               = each.value.role
   member             = "serviceAccount:${var.members[each.value.member].email}"
+
+  depends_on = [google_organization_iam_custom_role.organization]
 }
