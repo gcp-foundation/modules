@@ -33,7 +33,7 @@ module "folders" {
   for_each = { for folder in var.config.folders : folder.displayName => folder }
 
   display_name = each.value.folder.displayName
-  parent       = module.organizations[regex(local.regex_parent, each.value.folder.parent).name].id
+  parent       = module.organizations[regex(local.regex_parent, each.value.folder.parent).name].name
 }
 
 module "projects" {
