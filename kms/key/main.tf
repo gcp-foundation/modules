@@ -58,7 +58,7 @@ resource "google_kms_crypto_key" "prod_key" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
