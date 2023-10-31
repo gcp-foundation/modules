@@ -2,61 +2,71 @@ locals {
   regex_role = "(?P<type>.*)\\/(?P<name>.*)"
 
   org_roles = flatten([
-    for organization in try(var.policy.organizations, []) : [
-      for role in try(organization.roles, []) : {
-        name         = role.name
-        organization = organization.displayName
-        title        = role.title
-        description  = try(role.description, null)
-        permissions  = role.includedPermissions
-      }
+    for policy in var.policies : [
+      for organization in try(policy.organizations, []) : [
+        for role in try(organization.roles, []) : {
+          name         = role.name
+          organization = organization.displayName
+          title        = role.title
+          description  = try(role.description, null)
+          permissions  = role.includedPermissions
+        }
+      ]
     ]
   ])
 
   organization_bindings = flatten([
-    for organization in try(var.policy.organizations, []) : [
-      for binding in try(organization.iamPolicy.bindings, []) : [
-        for member in binding.members : {
-          name   = organization.displayName
-          role   = binding.role
-          member = member
-        }
+    for policy in var.policies : [
+      for organization in try(policy.organizations, []) : [
+        for binding in try(organization.iamPolicy.bindings, []) : [
+          for member in binding.members : {
+            name   = organization.displayName
+            role   = binding.role
+            member = member
+          }
+        ]
       ]
     ]
   ])
 
   folder_bindings = flatten([
-    for folder in try(var.policy.folders, []) : [
-      for binding in try(folder.iamPolicy.bindings, []) : [
-        for member in try(binding.members, []) : {
-          name   = folder.displayName
-          role   = binding.role
-          member = member
-        }
+    for policy in var.policies : [
+      for folder in try(policy.folders, []) : [
+        for binding in try(folder.iamPolicy.bindings, []) : [
+          for member in try(binding.members, []) : {
+            name   = folder.displayName
+            role   = binding.role
+            member = member
+          }
+        ]
       ]
     ]
   ])
 
   project_bindings = flatten([
-    for project in try(var.policy.projects, []) : [
-      for binding in try(project.iamPolicy.bindings, []) : [
-        for member in try(binding.members, []) : {
-          name   = project.displayName
-          role   = binding.role
-          member = member
-        }
+    for policy in var.policies : [
+      for project in try(policy.projects, []) : [
+        for binding in try(project.iamPolicy.bindings, []) : [
+          for member in try(binding.members, []) : {
+            name   = project.displayName
+            role   = binding.role
+            member = member
+          }
+        ]
       ]
     ]
   ])
 
   service_account_bindings = flatten([
-    for service_account in try(var.policy.service_accounts, []) : [
-      for binding in try(service_account.iamPolicy.bindings, []) : [
-        for member in try(binding.members, []) : {
-          name   = service_account.displayName
-          role   = binding.role
-          member = member
-        }
+    for policy in var.policies : [
+      for service_account in try(policy.service_accounts, []) : [
+        for binding in try(service_account.iamPolicy.bindings, []) : [
+          for member in try(binding.members, []) : {
+            name   = service_account.displayName
+            role   = binding.role
+            member = member
+          }
+        ]
       ]
     ]
   ])

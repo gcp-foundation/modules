@@ -1,5 +1,5 @@
-variable "policy" {
-  description = "The policy to apply"
+variable "policies" {
+  description = "A collection of policies to apply"
 }
 
 variable "resources" {
