@@ -15,7 +15,7 @@ locals {
     ]
   ])
 
-  prj_roles = flatten([
+  project_roles = flatten([
     for policy in var.policies : [
       for project in try(policy.projects, []) : [
         for role in try(project.roles, []) : {
@@ -97,7 +97,7 @@ resource "google_organization_iam_custom_role" "organization" {
 }
 
 resource "google_project_iam_custom_role" "project" {
-  for_each = { for role in local.org_roles : role.name => role }
+  for_each = { for role in local.project_roles : role.name => role }
 
   role_id     = each.value.name
   project     = var.resources.projects[each.value.project].project_id
