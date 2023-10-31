@@ -15,6 +15,20 @@ locals {
     ]
   ])
 
+  prj_roles = flatten([
+    for policy in var.policies : [
+      for project in try(policy.projects, []) : [
+        for role in try(project.roles, []) : {
+          name        = role.name
+          project     = project.displayName
+          title       = role.title
+          description = try(role.description, null)
+          permissions = role.permissions
+        }
+      ]
+    ]
+  ])
+
   organization_bindings = flatten([
     for policy in var.policies : [
       for organization in try(policy.organizations, []) : [
@@ -77,6 +91,16 @@ resource "google_organization_iam_custom_role" "organization" {
 
   role_id     = each.value.name
   org_id      = var.resources.organizations[each.value.organization].org_id
+  title       = each.value.title
+  description = each.value.description
+  permissions = each.value.permissions
+}
+
+resource "google_project_iam_custom_role" "project" {
+  for_each = { for role in local.org_roles : role.name => role }
+
+  role_id     = each.value.name
+  project     = var.resources.projects[each.value.project].project_id
   title       = each.value.title
   description = each.value.description
   permissions = each.value.permissions
