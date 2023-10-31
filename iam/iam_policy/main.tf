@@ -9,7 +9,7 @@ locals {
           organization = organization.displayName
           title        = role.title
           description  = try(role.description, null)
-          permissions  = role.includedPermissions
+          permissions  = role.permissions
         }
       ]
     ]
