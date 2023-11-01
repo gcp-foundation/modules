@@ -14,11 +14,21 @@ data "google_project" "projects" {
   project_id = regex(local.regex_name, each.value.name).name
 }
 
+data "google_project_iam_policy" "policies" {
+  for_each = { for project in data.google_cloud_asset_resources_search_all.projects.results : project.name => project }
+
+  project = regex(local.regex_name, each.value.name).name
+}
+
 locals {
   regex_project = "projects\\/(?P<number>.*)"
   regex_name    = "\\/\\/cloudresourcemanager\\.googleapis\\.com\\/(?P<type>.*)\\/(?P<name>.*)"
 
   projects = {
     for project in data.google_project.projects : project.name => project
+  }
+
+  policies = {
+    for policy in data.google_project_iam_policy.policies : policy.id => policy
   }
 }

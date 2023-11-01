@@ -13,3 +13,7 @@ output "projects" {
 output "service_accounts" {
   value = module.service_accounts.service_accounts
 }
+
+output "policies" {
+  value = module.projects.policies
+}
