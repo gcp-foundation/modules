@@ -28,6 +28,9 @@ variable "services_ipv4_cidr" {
 
 }
 
+variable "project" {
+  
+}
 variable "enable_private_endpoint" {
   description = "Gke private endpoint"
   type        = bool

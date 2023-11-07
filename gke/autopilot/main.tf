@@ -1,7 +1,7 @@
 resource "google_container_cluster" "gke-cluster" {
   name     = var.name
   location = var.location
-
+  project = var.project
   network    = var.network
   subnetwork = var.subnetwork
 
@@ -10,6 +10,7 @@ resource "google_container_cluster" "gke-cluster" {
   enable_autopilot    = true
   deletion_protection = false
 
+
   ip_allocation_policy {
 
     cluster_ipv4_cidr_block  = var.cluster_ipv4_cidr
@@ -17,6 +18,7 @@ resource "google_container_cluster" "gke-cluster" {
 
   }
   private_cluster_config {
+    enable_private_nodes = false
     enable_private_endpoint = var.enable_private_endpoint
     master_ipv4_cidr_block  = var.master_ipv4_cidr
   }
